@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn addRaylib(b: *std.build.Builder, target: std.zig.CrossTarget) *std.build.LibExeObjStep {
+pub fn addRaylib(b: *std.build.Builder, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.build.LibExeObjStep {
     const raylib_flags = &[_][]const u8{
         "-std=gnu99",
         "-D_GNU_SOURCE",
@@ -8,7 +8,7 @@ pub fn addRaylib(b: *std.build.Builder, target: std.zig.CrossTarget) *std.build.
         "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/1891
     };
 
-    const raylib = b.addStaticLibrary("raylib", null);
+    const raylib = b.addStaticLibrary(std.build.StaticLibraryOptions{ .name = "raylib", .target = target, .optimize = optimize });
     raylib.linkLibC();
 
     raylib.addIncludePath(srcdir ++ "/external/glfw/include");
